@@ -14,7 +14,7 @@
         </div>
         <p>双目失明，丝毫不影响我带崩三路</p>
         <div class="index-foot">
-          <!-- 不知道为什么用列表渲染，icon会出bug -->
+          <!-- 不知道为什么,用列表渲染，icon会出bug -->
          <!--  <ul>
             <li v-for="(item, index) in iconArr" :key="item">
               <i class="iconfont">{{item}}</i>
@@ -176,9 +176,4 @@ export default {
     color: #fff;
     font-weight: lighter;
   }
-/*  .chat-about{
-    width: 80%;
-    height: 100vh;
-    background-color: #ecebeb;
-  }*/
 </style>

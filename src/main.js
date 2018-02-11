@@ -18,11 +18,10 @@ const router = new VueRouter({
   mode: 'history' // 去掉地址中的'#' 以便接受微信登录授权回调参数
 })
 
-// 随机生成用户名
+// 随机生成用户名(无需注册登录操作的聊天室专用)
 let randomUser = Math.random().toString(36).substr(2)
 store.commit(mutTypes.RANDOM_USER, randomUser)
 
-// this.$store.commit(mutTypes.SHOP_DETAIL, {shopdetail, method})
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
