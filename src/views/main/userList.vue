@@ -1,5 +1,5 @@
 <template>
-<span>dsadsads</span>
+<span>userList</span>
 </template>
 
 <script>
@@ -20,6 +20,7 @@ export default {
  .user-list{
   width: 100%;
   height: 80vh;
-  background-color: #ddd
+  background-color: #ddd;
+  color: #fff;
  }
 </style>

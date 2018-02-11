@@ -2,10 +2,12 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
+import store from './store'
 import routes from './router'
 import VueRouter from 'vue-router'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min' // 不能与flexbile共用
+import * as mutTypes from './store/mutation-types'
 // import 'lib-flexible/flexible'
 
 Vue.config.productionTip = false
@@ -16,10 +18,16 @@ const router = new VueRouter({
   mode: 'history' // 去掉地址中的'#' 以便接受微信登录授权回调参数
 })
 
+// 随机生成用户名
+let randomUser = Math.random().toString(36).substr(2)
+store.commit(mutTypes.RANDOM_USER, randomUser)
+
+// this.$store.commit(mutTypes.SHOP_DETAIL, {shopdetail, method})
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })
