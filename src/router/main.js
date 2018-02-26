@@ -4,6 +4,7 @@ const main = resolve => { require(['../views/main'], resolve) }
 const chat = resolve => { require(['../views/main/chat'], resolve) }
 const head = resolve => { require(['../views/main/head'], resolve) }
 const userList = resolve => { require(['../views/main/userList'], resolve) }
+const chatList = resolve => { require(['../views/main/chatList'], resolve) }
 
 const subSites = [{
   path: 'head',
@@ -17,6 +18,10 @@ const subSites = [{
   path: 'head/chat',
   name: 'chat',
   component: chat
+}, {
+  path: 'head/chatList',
+  name: 'chatList',
+  component: chatList
 }]
 
 module.exports = {

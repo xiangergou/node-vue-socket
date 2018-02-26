@@ -7,5 +7,8 @@ import * as types from './mutation-types'
 export default {
   [types.RANDOM_USER] (state, user) {
     state.currentUser = user
+  },
+  [types.COOKIE_USER] (state, user) {
+    state.cookieUser = user
   }
 }

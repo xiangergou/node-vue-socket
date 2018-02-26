@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span>title</span>
+    <span>chat <button class="btn btn-group return" type="button" @click="logout">退出</button></span>
     <hr style="width: 100%">
     <div class="chat-content">
       <ul id="chatContainer">
@@ -8,10 +8,10 @@
           <p v-show="typeof(item) !== 'object' ">欢迎 <i style="color: red">{{item}}</i> 来到聊天室</p>
           <div class="self-speak" v-if="(item.fromUser === currentUser)">
               <em v-show="item.content" class="box box-right">{{item.content}}</em>
-              <strong v-show="item.user">: {{item.user}}</strong>
+              <strong v-show="item.user">: {{item.fromUser}}</strong>
           </div>
           <div v-else class="othsers-speak">
-              <strong v-show="item.user">{{item.user}}: </strong>
+              <strong v-show="item.user">{{item.fromUser}}: </strong>
               <em v-show="item.content" class="box box-left">{{item.content}}</em>
           </div>
         </li>
@@ -68,17 +68,22 @@ export default {
         CHAT.submit(msgContent)
         this.msg = ''
       }
+    },
+    logout () {
+      this.$cookie.delete('user')
+      alert('登出成功')
+      this.$router.push('/login')
     }
   },
   mounted () {
     CHAT.init()
-    CHAT.message()
+    CHAT.message(this.$store.state.currentUser)
     CHAT.setUser(this.$store.state.currentUser)
   }
 }
 </script>
 
-<style lang="css">
+<style lang="css" scope>
   ::-webkit-scrollbar {display:none}
   #chatContainer{
     height: 100%;
@@ -120,7 +125,7 @@ export default {
     box-sizing: border-box;
   }
    .chat-content{
-    padding: 20px 10px;
+    padding: 10px;
     box-sizing: border-box;
     height: 60vh;
     overflow-y: scroll;
@@ -181,5 +186,11 @@ export default {
   .box-right:before{
     left: 100%;
     border-left: 13px solid #da2b65;
+  }
+  .return{
+    margin-right: 20px;
+    float: right;
+    color: #fff;
+    background-color: #da2b65;
   }
 </style>

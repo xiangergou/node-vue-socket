@@ -8,19 +8,23 @@ import VueRouter from 'vue-router'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min' // 不能与flexbile共用
 import * as mutTypes from './store/mutation-types'
+import VueResource from 'vue-resource'
+import VueCookie from 'vue-cookie'
 // import 'lib-flexible/flexible'
 
 Vue.config.productionTip = false
 
+Vue.use(VueResource)
 Vue.use(VueRouter)
+Vue.use(VueCookie)
 const router = new VueRouter({
   routes, // short for routes: routes
   mode: 'history' // 去掉地址中的'#' 以便接受微信登录授权回调参数
 })
 
 // 随机生成用户名(无需注册登录操作的聊天室专用)
-let randomUser = Math.random().toString(36).substr(2)
-store.commit(mutTypes.RANDOM_USER, randomUser)
+// let randomUser = Math.random().toString(36).substr(2)
+// store.commit(mutTypes.RANDOM_USER, randomUser)
 
 /* eslint-disable no-new */
 new Vue({
@@ -28,5 +32,29 @@ new Vue({
   router,
   store,
   components: { App },
-  template: '<App/>'
+  template: '<App/>',
+  watch: {
+    '$route': 'checkLogin'
+  },
+  // 进入页面时
+  mounted () {
+    this.checkLogin()
+  },
+  methods: {
+    checkLogin () {
+      // 检查是否存在session
+      // cookie操作方法在源码里有或者参考网上的即可
+      if (!this.$cookie.get('user')) {
+        // 如果没有登录状态则跳转到登录页
+        this.$router.push('/login')
+      } else {
+        let userCookie = this.$cookie.get('user')
+        store.commit(mutTypes.COOKIE_USER, userCookie)
+        this.$router.push('/main/head')
+        store.commit(mutTypes.RANDOM_USER, userCookie)
+        // 否则跳转到登录后的页面
+        // this.$router.push('/user_info');
+      }
+    }
+  }
 })

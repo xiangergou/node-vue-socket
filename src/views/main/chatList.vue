@@ -1,12 +1,13 @@
 <template>
   <div class="container-fluid-chatlist">
-    <ul class="chat-ul">
-      <li v-for="(item, index) in contacts" :key="index" :class="{'active': index === selectedList}" @click="talkto(index)">
+    <ul class="chat-ul" @click="talkto">
+      <li>
         <div class="avater">
           <img src="../../assets/logo.jpeg" alt="">
         </div>
         <div class="msg">
-          <p>{{item}}</p>
+          <p>name <em>time</em></p>
+          <span>msg</span>
         </div>
       </li>
     </ul>
@@ -15,32 +16,19 @@
 
 <script>
 export default {
-  name: 'userList',
+  name: 'chatList',
   components: {},
-  props: {
-    username: ''
-  },
   data () {
     return {
-      contacts: [],
-      selectedList: null
+      rev: ''
     }
   },
   methods: {
-    talkto (index) {
-      this.selectedList = index
+    talkto () {
+      console.log('talk to other')
     }
   },
   mounted () {
-    // TODO get contacts
-    let params = {
-      username: this.username
-    }
-    this.$http.post('http://127.0.0.1:9001/api/getContact', params).then((res) => {
-      if (res.body.success) {
-        this.contacts = res.body.data.reverse()
-      }
-    })
   }
 }
 </script>
@@ -48,9 +36,7 @@ export default {
 <style lang="css" scoped>
   .container-fluid-chatlist{
     width: 100%;
-    height: 90%;
     color: #fff;
-    overflow-y: scroll;
   }
   .chat-ul{
     width: 100%;
@@ -60,14 +46,11 @@ export default {
   }
   .chat-ul li{
     width: 100%;
-    padding: 10px 20px;
+    padding: 5px;
     box-sizing: border-box;
     display: flex;
     border-bottom: 1px solid #d5265a;
-    cursor: pointer;
-  }
-  .chat-ul li:last-child{
-    border-bottom: none
+    cursor: po
   }
   .chat-ul .avater{
     flex: 1;
@@ -76,13 +59,12 @@ export default {
     flex: 7;
   }
   .avater img{
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     border-radius: 5px;
   }
   .msg{
-    padding: 0px 20px;
-    padding-top: 5px;
+    padding: 0px 10px;
     box-sizing: border-box;
   }
   .msg p{
@@ -95,9 +77,5 @@ export default {
   }
   .msg span{
     color: #9b9b9b;
-  }
-  .active{
-    background-color: #efefef;
-    color: #000;
   }
 </style>

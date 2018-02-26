@@ -2,15 +2,15 @@
   <div class="container-fluid">
     <div class="container-left">
       <header class="container-left-tab">
-        <img src="../../assets/logo.png" alt="">
-        <strong>向二狗</strong>
+        <img src="../../assets/logo.jpeg" alt="">
+        <strong>{{username || '向二狗'}}</strong>
         <span class="nav-font" @click="addContact">
           <i class="iconfont">&#xe623;</i>
         </span>
         <div class="add-contact" v-show="isShowaddPrompt">
           <label for="" class="label-default">添加好友</label>
-          <input type="text" class="">
-          <button class="btn">添加</button>
+          <input type="text" class="" v-model="friendName">
+          <button class="btn" @click="addFriend">添加</button>
         </div>
         <p>双目失明，丝毫不影响我带崩三路</p>
         <div class="index-foot">
@@ -20,10 +20,10 @@
               <i class="iconfont">{{item}}</i>
             </li>
           </ul> -->
-          <span :class="{'active': currentView == 'userList'}" @click="toggleTabs('userList')">
+          <span :class="{'active': currentView == 'chatList'}" @click="toggleTabs('chatList')">
             <i class="iconfont">&#xe624;</i>
           </span>
-          <span :class="{'active': currentView == 'chat'}" @click="toggleTabs('chat')">
+          <span :class="{'active': currentView == 'userList'}" @click="toggleTabs('userList')">
             <i class="iconfont">&#xe783;</i>
           </span>
           <span>
@@ -32,7 +32,7 @@
         </div>
       </header>
       <article class="container-left-userlist">
-         <component :is="currentView" keep-alive></component>
+         <component :is="currentView" keep-alive :username="username"></component>
       </article>
     </div>
     <div class="container-right">
@@ -44,19 +44,23 @@
 <script>
 import userList from './userList'
 import chat from './chat'
+import chatList from './chatList'
 
 export default {
   name: 'chat-header',
   data () {
     return {
-      currentView: 'userList',
-      isShowaddPrompt: false
+      currentView: 'chatList',
+      isShowaddPrompt: false,
+      username: 'yun',
+      friendName: ''
       // iconArr: ['&#xe624;', '&#xe783;', '&#xe628;']
     }
   },
   components: {
     userList,
-    chat
+    chat,
+    chatList
   },
   methods: {
     toggleTabs (routeName) {
@@ -64,9 +68,26 @@ export default {
     },
     addContact () {
       this.isShowaddPrompt = !this.isShowaddPrompt
+    },
+    addFriend () {
+      let params = {
+        friendName: this.friendName,
+        username: this.username
+      }
+      let self = this
+      self.$http.post('http://127.0.0.1:9001/api/addFriend', params).then((res) => {
+        if (res.body.success) {
+          alert('添加成功')
+          self.isShowaddPrompt = false
+          self.$router.push('/main/head')
+        }
+      }).catch((err) => {
+        alert(err)
+      })
     }
   },
   mounted () {
+    this.username = this.$route.params.username || this.$store.state.cookieUser
   }
 }
 </script>
@@ -82,6 +103,7 @@ export default {
   .container-fluid{
     width: 100%;
     height: 100vh;
+    position: relative;
   }
   .container-left{
     width: 280px;
@@ -90,11 +112,12 @@ export default {
   }
   header{
     width:100%;
-    height: 25vh;
+    height: 180px;
     background: #292c31;
-    padding: 20px 10px;
+    padding: 20px;
     box-sizing: border-box;
     position: relative;
+    z-index: 9999;
   }
   header strong{
     color: #fff;
@@ -102,6 +125,7 @@ export default {
   header img{
     width: 40px;
     height: 40px;
+    border-radius: 5px;
   }
   .nav-font{
     position: relative;
@@ -169,8 +193,11 @@ export default {
     font-size: 13px;
   }
   .container-left-userlist{
-    width: 100%;
-    height: 75vh;
+    position: absolute;
+    height: 100%;
+    top: 0;
+    padding-top: 180px;
+    width: 280px;
     background-color: #292c31;
     float: left;
     color: #fff;
