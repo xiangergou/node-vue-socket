@@ -35,6 +35,7 @@
 
 <script>
 import CHAT from '../client'
+import eventVue from '../../utils/eventVue'
 
 export default {
   name: 'chat',
@@ -46,19 +47,19 @@ export default {
       chatList: [],
       CHAT,
       currentUser: this.$store.state.currentUser,
-      currentUserAavatar: ''
+      currentUserAavatar: '',
+      toUser: ''
     }
   },
   props: {
-    currentChatWay: '',
-    toUser: ''
+    currentChatWay: ''
   },
   computed: {
     chatData () {
       return CHAT.msgArr
     },
     chat () {
-      return (this.currentChatWay === 'chatRoom' ? '此乃聊天室也' : '闲聊')
+      return (this.currentChatWay === 'chatRoom' ? '此乃聊天室也' : this.currentChatWay === 'userList' ? (this.talkto || '私聊') : '群聊')
     }
   },
   watch: { // 动态添加数据,滚动条滚动到底部问题
@@ -106,6 +107,10 @@ export default {
       currentChatWay: this.currentChatWay
     }
     CHAT.message(msgWayData)
+    eventVue.$on('talkto', (username) => {
+      this.toUser = username
+      this.CHAT.msgArr = []
+    })
   }
 }
 </script>

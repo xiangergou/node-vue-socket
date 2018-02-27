@@ -14,9 +14,7 @@ const CHAT = {
     this.socket.emit('sayTo', msgContent)
   },
   message: function (msgWayData) {
-    // if (msgWayData.currentChatWay === 'chatRoom') {
-
-    // }
+    // 聊天室
     this.socket.on('msgto', function (obj) {
       let msgObj = {}
       // msgObj.user = obj.fromUser
@@ -25,11 +23,13 @@ const CHAT = {
       msgObj.currentUserAva = obj.currentUserAva
       CHAT.msgArr.push(msgObj)
     })
-    // this.socket.on('to' + msgWayData.currentUser, function (obj) {
-    //   console.log(obj, 'obj')
-    //   CHAT.msgArr.push(obj)
-    //   console.log('CHAT.msgArr', obj)
-    // })
+    // 私聊
+    this.socket.on('to' + msgWayData.currentUser, function (obj) {
+      let msgObj = obj
+      msgObj.content = obj.msg
+      CHAT.msgArr.push(msgObj)
+      console.log('CHAT.msgArr', msgObj)
+    })
   },
   init: function (username) {
     this.socket = io.connect(webConfig.socket)

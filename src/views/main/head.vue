@@ -3,7 +3,7 @@
     <div class="container-left">
       <header class="container-left-tab">
         <img :src="currentUserAavatar" alt="">
-        <strong>{{username || '向二狗'}}</strong>
+        <strong>{{username || '未登录'}}</strong>
         <span class="nav-font" @click="addContact">
           <i class="iconfont">&#xe623;</i>
         </span>
@@ -52,10 +52,10 @@ export default {
   name: 'chat-header',
   data () {
     return {
-      currentView: 'chatRoom',
+      currentView: 'userList',
       currentUser: '',
       isShowaddPrompt: false,
-      username: 'yun',
+      username: '',
       friendName: '',
       avatar: '',
       currentUserAavatar: null,
@@ -82,21 +82,24 @@ export default {
     addFriend () {
       let params = {
         friendName: this.friendName,
-        username: this.username
+        currentUser: this.username
       }
       let self = this
       self.$http.post('http://127.0.0.1:9001/api/addFriend', params).then((res) => {
         if (res.body.success) {
           alert('添加成功')
           self.isShowaddPrompt = false
-          self.$router.push('/main/head')
+          location.reload()
+          // self.$router.push('head')
+        } else {
+          alert(res.body.msg)
         }
       })
     }
   },
   mounted () {
     this.currentUser = JSON.parse(this.$store.state.cookieUser)
-    this.username = this.currentUser.username
+    this.username = JSON.parse(this.$store.state.cookieUser).username
     this.currentUserAavatar = this.currentUser.avatar
     CHAT.setUser(this.username)
   }

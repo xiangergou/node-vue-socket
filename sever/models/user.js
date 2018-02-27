@@ -3,10 +3,9 @@ const mongoose = require('../lib/db')
 const UserSchema = mongoose.Schema({
   username: { type: 'string', required: true },
   password: { type: 'string', required: true },
-  // friendslist: Array,
+  friendslist: Array,
   avatar: { type: 'string', required: false }
 })
-// UserSchema.index({ username: 1 }, { unique: true }).exec()
 
 var UserModule = mongoose.model('UserModule', UserSchema)
 
@@ -32,8 +31,8 @@ User.prototype.save = function(user, callback) {
   })
 }
 
-User.getUser = function (user, callback) {
-  UserModule.findOne({username: user.username}, ((err, data) => {
+User.getUser = function (username, callback) {
+  UserModule.findOne({username: username}, ((err, data) => {
     if (err) {
       return callback(err)
     } else {
@@ -42,21 +41,21 @@ User.getUser = function (user, callback) {
   }))
 }
 
-User.addFriend = function (user, callback) {
+User.addFriend = function (addData, currentUser, callback) {
   UserModule.update({
-    username: user.username
+    username: currentUser
   }, {
     // $unset: {
     //   "friendslist": []
     // }
     $push:{
-      friendslist: user.friendName
+      friendslist: addData
     }
   }, ((err, u) => {
     if (err) {
       return callback(err)
     } else {
-      return callback(null, user.username)
+      return callback(null, addData)
     }
   }))
 }

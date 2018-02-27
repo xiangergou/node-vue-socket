@@ -44,6 +44,13 @@ io.on('connection', function (socket) {
     socket.on('sayTo',function (msgContent) {
       if (msgContent.currentChatWay === 'chatRoom') {
         io.sockets.emit("msgto", msgContent)
+      } else if (msgContent.currentChatWay === 'userList') {
+        var toUser = msgContent.toUser
+        var fromUser = msgContent.fromUser
+        if (toUser in onlineUsers) {
+          onlineUsers[toUser].emit('to' + toUser, msgContent)
+          onlineUsers[fromUser].emit('to' + fromUser, msgContent)
+        }
       }
 
 

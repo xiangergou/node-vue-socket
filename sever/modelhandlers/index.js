@@ -2,7 +2,8 @@ var User = require('../models/user')
 
 var userHandler = {
   addUser: function addUser(user, callback) {
-    User.getUser(user, function(err, data) {
+    let username = user.username
+    User.getUser(username, function(err, data) {
       if (err) {
         return callback({
           status: 'err',
@@ -38,6 +39,7 @@ var userHandler = {
   },
 
   login: function(user, callback) {
+    let username = user.username
     if(!user.username || !user.password) {
       return callback({
         status: 'ERROR',
@@ -45,7 +47,7 @@ var userHandler = {
         msg: '请输入用户名密码'
       })
     } else {
-      User.getUser(user, function(err, u) {
+      User.getUser(username, function(err, u) {
         if(err) {
           return callback({status: 'ERROR',meta: 'user',data: {user: null},msg: '服务器出错',success :false})
         } else if (!u) {
@@ -60,7 +62,9 @@ var userHandler = {
   },
 
   addFriend: function(user, callback) {
-    User.getUser(user, function(err, data) {
+    let friendName = user.friendName
+    let currentUser = user.currentUser
+    User.getUser(friendName, function(err, data) {
       if (err) {
         return callback({
           status: 'err',
@@ -68,7 +72,8 @@ var userHandler = {
           msg: '服务器错误'
         })
       } else if (data) {
-        User.addFriend(user, function(err, data) {
+        let friendData = data
+        User.addFriend(friendData, currentUser, function(err, userData) {
           if (err) {
             return callback({
               status: 'err',
@@ -80,15 +85,22 @@ var userHandler = {
             status: 'ok',
             success: true,
             msg: '添加成功',
-            data: data
+            data: userData
           })
         })
-      } 
+      } else {
+        return callback({
+          status: 'err',
+          success: false,
+          msg: '未查找到该用户'
+        })
+      }
     })
   },
 
   getContact: function (user, callback) {
-    User.getUser(user, function(err, data) {
+    let username = user.username
+    User.getUser(username, function(err, data) {
       if (err) {
         return callback({
           status: 'err',
@@ -99,7 +111,7 @@ var userHandler = {
       return callback({
         status: 'ok',
         success: true,
-        data: data.friendslist
+        data: data
       })
     })
   }

@@ -1,12 +1,12 @@
 <template>
   <div class="container-fluid-chatlist">
     <ul class="chat-ul">
-      <li v-for="(item, index) in contacts" :key="index" :class="{'active': index === selectedList}" @click="talkto(index)">
+      <li v-for="(item, index) in contacts" :key="index" :class="{'active': index === selectedList}" @click="talkto(index, item)">
         <div class="avater">
-          <img src="../../assets/logo.jpeg" alt="">
+          <img :src="item.avatar" alt="">
         </div>
         <div class="msg">
-          <p>{{item}}</p>
+          <p>{{item.username}}</p>
         </div>
       </li>
     </ul>
@@ -14,32 +14,38 @@
 </template>
 
 <script>
+import eventVue from '../../utils/eventVue'
+
 export default {
   name: 'userList',
   components: {},
   props: {
-    username: ''
+    // username: ''
   },
   data () {
     return {
       contacts: [],
-      selectedList: null
+      selectedList: null,
+      username: ''
     }
   },
   methods: {
-    talkto (index) {
+    talkto (index, item) {
       this.selectedList = index
+      console.log('talk to ' + item.username)
+      eventVue.$emit('talkto', item.username)
     }
   },
   mounted () {
+    this.username = JSON.parse(this.$store.state.cookieUser).username
     // TODO get contacts
     let params = {
       username: this.username
     }
     this.$http.post('http://127.0.0.1:9001/api/getContact', params).then((res) => {
       if (res.body.success) {
-        if (res.body.data && res.body.data.length > 1) {
-          this.contacts = res.body.data.reverse()
+        if (res.body.data && res.body.data.friendslist.length >= 1) {
+          this.contacts = res.body.data.friendslist.reverse()
         }
       }
     })
