@@ -2,9 +2,9 @@ const mongoose = require('../lib/db')
 
 const UserSchema = mongoose.Schema({
   username: { type: 'string', required: true },
-  password: String,
-  friendslist: Array,
-  avatar: String
+  password: { type: 'string', required: true },
+  // friendslist: Array,
+  avatar: { type: 'string', required: false }
 })
 // UserSchema.index({ username: 1 }, { unique: true }).exec()
 
@@ -14,13 +14,14 @@ function User(user) {
   this.username = user.username
   this.password = user.password
   this.friendslist = user.friendslist
-  this.avatar = user.avatar || ''
+  this.avatar = user.avatar
 }
 
 User.prototype.save = function(user, callback) {
   var user = {
     username: this.username,
-    password: this.password
+    password: this.password,
+    avatar: this.avatar
   }
   var newUser = new UserModule(user)
   newUser.save(function (err, user) {

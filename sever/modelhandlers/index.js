@@ -47,13 +47,13 @@ var userHandler = {
     } else {
       User.getUser(user, function(err, u) {
         if(err) {
-          return callback({status: 'ERROR',meta: 'user',data: {user: null},msg: '服务器出错'})
+          return callback({status: 'ERROR',meta: 'user',data: {user: null},msg: '服务器出错',success :false})
         } else if (!u) {
-          return callback({status: 'ERROR',meta: 'user',data: {user: null},msg: '没有该用户'})
+          return callback({status: 'ERROR',meta: 'user',data: {user: null},msg: '没有该用户',success :false})
         } else if (u.password !== user.password) {
-          return callback({status: 'ERROR',meta: 'user',data: {user: null},msg: '请输入正确密码'})
+          return callback({status: 'ERROR',meta: 'user',data: {user: null},msg: '请输入正确密码',success :false})
         } else {
-          return callback({status: 'OK',meta: 'user',data: {user: u},msg: '登陆验证成功'})
+          return callback({status: 'OK',meta: 'user',data: {user: u},msg: '登陆验证成功', success: true})
         }
       })
     }

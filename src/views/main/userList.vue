@@ -38,7 +38,9 @@ export default {
     }
     this.$http.post('http://127.0.0.1:9001/api/getContact', params).then((res) => {
       if (res.body.success) {
-        this.contacts = res.body.data.reverse()
+        if (res.body.data && res.body.data.length > 1) {
+          this.contacts = res.body.data.reverse()
+        }
       }
     })
   }

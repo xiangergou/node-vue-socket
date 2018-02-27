@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="container-left">
       <header class="container-left-tab">
-        <img src="../../assets/logo.jpeg" alt="">
+        <img :src="currentUserAavatar" alt="">
         <strong>{{username || '向二狗'}}</strong>
         <span class="nav-font" @click="addContact">
           <i class="iconfont">&#xe623;</i>
@@ -26,7 +26,7 @@
           <span :class="{'active': currentView == 'userList'}" @click="toggleTabs('userList')">
             <i class="iconfont">&#xe783;</i>
           </span>
-          <span>
+          <span :class="{'active': currentView == 'chatRoom'}" @click="toggleTabs('chatRoom')">
             <i class="iconfont">&#xe628;</i>
           </span>
         </div>
@@ -36,7 +36,7 @@
       </article>
     </div>
     <div class="container-right">
-        <chat></chat>
+        <chat :currentChatWay="currentChatWay"></chat>
     </div>
   </div>
 </template>
@@ -45,26 +45,36 @@
 import userList from './userList'
 import chat from './chat'
 import chatList from './chatList'
+import chatRoom from './chatRoom'
+import CHAT from '../client'
 
 export default {
   name: 'chat-header',
   data () {
     return {
-      currentView: 'chatList',
+      currentView: 'chatRoom',
+      currentUser: '',
       isShowaddPrompt: false,
       username: 'yun',
-      friendName: ''
+      friendName: '',
+      avatar: '',
+      currentUserAavatar: null,
+      currentChatWay: 'chatRoom'
       // iconArr: ['&#xe624;', '&#xe783;', '&#xe628;']
     }
   },
   components: {
     userList,
     chat,
-    chatList
+    chatList,
+    chatRoom
+  },
+  computed: {
   },
   methods: {
     toggleTabs (routeName) {
       this.currentView = routeName
+      this.currentChatWay = routeName
     },
     addContact () {
       this.isShowaddPrompt = !this.isShowaddPrompt
@@ -81,13 +91,14 @@ export default {
           self.isShowaddPrompt = false
           self.$router.push('/main/head')
         }
-      }).catch((err) => {
-        alert(err)
       })
     }
   },
   mounted () {
-    this.username = this.$route.params.username || this.$store.state.cookieUser
+    this.currentUser = JSON.parse(this.$store.state.cookieUser)
+    this.username = this.currentUser.username
+    this.currentUserAavatar = this.currentUser.avatar
+    CHAT.setUser(this.username)
   }
 }
 </script>

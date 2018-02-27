@@ -42,7 +42,6 @@ new Vue({
   },
   methods: {
     checkLogin () {
-      // 检查是否存在session
       // cookie操作方法在源码里有或者参考网上的即可
       if (!this.$cookie.get('user')) {
         // 如果没有登录状态则跳转到登录页
@@ -51,7 +50,7 @@ new Vue({
         let userCookie = this.$cookie.get('user')
         store.commit(mutTypes.COOKIE_USER, userCookie)
         this.$router.push('/main/head')
-        store.commit(mutTypes.RANDOM_USER, userCookie)
+        // store.commit(mutTypes.RANDOM_USER, userCookie)
         // 否则跳转到登录后的页面
         // this.$router.push('/user_info');
       }

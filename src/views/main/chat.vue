@@ -1,18 +1,28 @@
 <template>
   <div>
-    <span>chat <button class="btn btn-group return" type="button" @click="logout">退出</button></span>
+    <span>{{chat}} <button class="btn btn-group return" type="button" @click="logout">退出</button></span>
     <hr style="width: 100%">
     <div class="chat-content">
       <ul id="chatContainer">
         <li v-for="item in CHAT.msgArr" :key="item.id">
           <p v-show="typeof(item) !== 'object' ">欢迎 <i style="color: red">{{item}}</i> 来到聊天室</p>
           <div class="self-speak" v-if="(item.fromUser === currentUser)">
-              <em v-show="item.content" class="box box-right">{{item.content}}</em>
-              <strong v-show="item.user">: {{item.fromUser}}</strong>
+              <p class="content">
+                <i>{{item.fromUser}}</i>
+                <em v-show="item.content" class="box box-right">{{item.content}}</em>
+              </p>
+              <strong v-show="item.fromUser">
+                <img :src="item.currentUserAva" alt="">
+              </strong>
           </div>
           <div v-else class="othsers-speak">
-              <strong v-show="item.user">{{item.fromUser}}: </strong>
-              <em v-show="item.content" class="box box-left">{{item.content}}</em>
+              <strong v-show="item.fromUser">
+                <img :src="item.currentUserAva" alt="">
+              </strong>
+              <p class="content">
+                <i>{{item.fromUser}}</i>
+                <em v-show="item.content" class="box box-left">{{item.content}}</em>
+              </p>
           </div>
         </li>
       </ul>
@@ -35,12 +45,20 @@ export default {
       socket: null,
       chatList: [],
       CHAT,
-      currentUser: this.$store.state.currentUser
+      currentUser: this.$store.state.currentUser,
+      currentUserAavatar: ''
     }
+  },
+  props: {
+    currentChatWay: '',
+    toUser: ''
   },
   computed: {
     chatData () {
       return CHAT.msgArr
+    },
+    chat () {
+      return (this.currentChatWay === 'chatRoom' ? '此乃聊天室也' : '闲聊')
     }
   },
   watch: { // 动态添加数据,滚动条滚动到底部问题
@@ -63,7 +81,10 @@ export default {
         }
         var msgContent = {
           msg: this.msg,
-          user: this.$store.state.currentUser
+          fromUser: this.currentUser,
+          currentChatWay: this.currentChatWay,
+          toUser: this.toUser,
+          currentUserAva: this.currentUserAavatar
         }
         CHAT.submit(msgContent)
         this.msg = ''
@@ -77,8 +98,14 @@ export default {
   },
   mounted () {
     CHAT.init()
-    CHAT.message(this.$store.state.currentUser)
-    CHAT.setUser(this.$store.state.currentUser)
+    let user = JSON.parse(this.$store.state.cookieUser)
+    this.currentUser = user.username
+    this.currentUserAavatar = user.avatar
+    let msgWayData = {
+      currentUser: this.currentUser,
+      currentChatWay: this.currentChatWay
+    }
+    CHAT.message(msgWayData)
   }
 }
 </script>
@@ -125,7 +152,7 @@ export default {
     box-sizing: border-box;
   }
    .chat-content{
-    padding: 10px;
+    /*padding: 10px;*/
     box-sizing: border-box;
     height: 60vh;
     overflow-y: scroll;
@@ -137,10 +164,12 @@ export default {
    .chat-content ul{
     list-style: none;
     width: 100%;
+    padding: 0;
    }
    .chat-content ul li{
     text-align: left;
-    margin: 30px 0;
+    margin: 10px 0;
+    padding: 0 10px;
    }
    .chat-content ul li em{
     font-style: normal;
@@ -157,7 +186,6 @@ export default {
     color: #fff;
     font-size: 14px;
     position: relative;
-    top:10px;
     padding: 5px 10px;
     background: #da2b65;
     -moz-border-radius: 5px;
@@ -169,19 +197,21 @@ export default {
     content: "";
     width: 0;
     height: 0;
-    top: 5px;
+    top: 4px;
     border-top: 5px solid transparent;
     border-bottom: 5px solid transparent;
   }
   .box-left{
-    left:20px;
+    top: 5px;
+    left: 10px;
   }
   .box-left:before{
     right: 100%;
     border-right: 13px solid #da2b65;
   }
   .box-right{
-    right: 20px;
+    top: 5px;
+    right: 10px;
   }
   .box-right:before{
     left: 100%;
@@ -192,5 +222,28 @@ export default {
     float: right;
     color: #fff;
     background-color: #da2b65;
+  }
+  .chat-content img{
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+    margin-right: 14px;
+    display: inline-block;
+  }
+  .content{
+    display: inline-block;
+    padding: 0;
+  }
+  .content i{
+    display: block;
+    font-size: 15px;
+    font-style: normal;
+    color: #9b9b9b;
+  }
+  .self-speak img{
+    float: right;
+  }
+  .othsers-speak img{
+    float: left;
   }
 </style>
