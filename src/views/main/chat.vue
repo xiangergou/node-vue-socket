@@ -59,7 +59,7 @@ export default {
       return CHAT.msgArr
     },
     chat () {
-      return (this.currentChatWay === 'chatRoom' ? '此乃聊天室也' : this.currentChatWay === 'userList' ? (this.talkto || '私聊') : '群聊')
+      return (this.currentChatWay === 'chatRoom' ? '此乃聊天室也' : this.currentChatWay === 'userList' ? (this.toUser || '私聊') : '群聊')
     }
   },
   watch: { // 动态添加数据,滚动条滚动到底部问题

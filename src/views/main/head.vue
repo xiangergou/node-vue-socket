@@ -47,12 +47,13 @@ import chat from './chat'
 import chatList from './chatList'
 import chatRoom from './chatRoom'
 import CHAT from '../client'
+import eventVue from '../../utils/eventVue'
 
 export default {
   name: 'chat-header',
   data () {
     return {
-      currentView: 'userList',
+      currentView: 'chatRoom',
       currentUser: '',
       isShowaddPrompt: false,
       username: '',
@@ -89,7 +90,7 @@ export default {
         if (res.body.success) {
           alert('添加成功')
           self.isShowaddPrompt = false
-          location.reload()
+          eventVue.$emit('addFriendSuccess', self.isShowaddPrompt)
           // self.$router.push('head')
         } else {
           alert(res.body.msg)

@@ -47,9 +47,13 @@ io.on('connection', function (socket) {
       } else if (msgContent.currentChatWay === 'userList') {
         var toUser = msgContent.toUser
         var fromUser = msgContent.fromUser
+        console.log(toUser, fromUser)
+        // var msg = msgContent.msg
         if (toUser in onlineUsers) {
           onlineUsers[toUser].emit('to' + toUser, msgContent)
           onlineUsers[fromUser].emit('to' + fromUser, msgContent)
+        } else {
+          onlineUsers[fromUser].emit('warning' + fromUser, toUser + '不在线')
         }
       }
 

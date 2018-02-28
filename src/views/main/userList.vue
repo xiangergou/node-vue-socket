@@ -34,19 +34,26 @@ export default {
       this.selectedList = index
       console.log('talk to ' + item.username)
       eventVue.$emit('talkto', item.username)
+    },
+    getContacts () {
+      let params = {
+        username: this.username
+      }
+      this.$http.post('http://127.0.0.1:9001/api/getContact', params).then((res) => {
+        if (res.body.success) {
+          if (res.body.data && res.body.data.friendslist.length >= 1) {
+            this.contacts = res.body.data.friendslist.reverse()
+          }
+        }
+      })
     }
   },
   mounted () {
     this.username = JSON.parse(this.$store.state.cookieUser).username
-    // TODO get contacts
-    let params = {
-      username: this.username
-    }
-    this.$http.post('http://127.0.0.1:9001/api/getContact', params).then((res) => {
-      if (res.body.success) {
-        if (res.body.data && res.body.data.friendslist.length >= 1) {
-          this.contacts = res.body.data.friendslist.reverse()
-        }
+    this.getContacts()
+    eventVue.$on('addFriendSuccess', (addFlag) => {
+      if (!addFlag) {
+        this.getContacts()
       }
     })
   }

@@ -30,6 +30,10 @@ const CHAT = {
       CHAT.msgArr.push(msgObj)
       console.log('CHAT.msgArr', msgObj)
     })
+    this.socket.on('warning' + msgWayData.currentUser, function (warning) {
+      console.log(warning)
+      window.alert(warning)
+    })
   },
   init: function (username) {
     this.socket = io.connect(webConfig.socket)

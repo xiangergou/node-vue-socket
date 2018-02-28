@@ -7,7 +7,8 @@
         </div>
         <div class="msg">
           <p>name <em>time</em></p>
-          <span>msg</span>
+          <span>msg</span><br>
+          <strong>ps: 此组件本预留消息列表，然做至彼时发觉此处意义已然不大,遂留空，有缘再续。</strong>
         </div>
       </li>
     </ul>
