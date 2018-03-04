@@ -1,6 +1,6 @@
 # node-vue-socket
 
-> A Vue.js project
+> 基于node+vue—socket.io实现的即时聊天系统(聊天室，私聊，项目已完成，readme稍后更新)
 
 ## Build Setup
 

@@ -5,12 +5,6 @@ const CHAT = {
   msgArr: [],
   currentUser: '',
   submit: function (msgContent) {
-    // this.socket.emit('sendMsg', obj)
-    // let data = {
-    //   to: 'ergou',
-    //   msg: obj.msg,
-    //   from: CHAT.currentUser
-    // }
     this.socket.emit('sayTo', msgContent)
   },
   message: function (msgWayData) {
@@ -46,15 +40,7 @@ const CHAT = {
     CHAT.currentUser = user
     this.socket.emit('setName', user)
   },
-  // setName (user) {
-  //   this.socket.emit('setName', user)
-  // },
   sayTo (data) {
-    // let data = {
-    //   to: 'ergou',
-    //   msg: data,
-    //   from: CHAT.currentUser
-    // }
     this.socket.emit('sayTo', data)
   }
 }
