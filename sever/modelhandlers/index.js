@@ -7,7 +7,7 @@ var userHandler = {
       if (err) {
         return callback({
           status: 'err',
-          success: false,
+          'success': false,
           msg: '服务器错误'
         })
       } else if (data) {
@@ -22,14 +22,14 @@ var userHandler = {
           if (err) {
             return callback({
               status: 'err',
-              success: false,
+              'success': false,
               msg: '服务器错误'
             })
           } else {
             return callback({
               status: 'ok',
-              success: true,
-              msg: '注册成功',
+              'success': true,
+              msg: '注册成功！',
               data: u
             })
           }

@@ -10,10 +10,15 @@ import 'bootstrap/dist/js/bootstrap.min' // 不能与flexbile共用
 import * as mutTypes from './store/mutation-types'
 import VueResource from 'vue-resource'
 import VueCookie from 'vue-cookie'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 // import 'lib-flexible/flexible'
 
 Vue.config.productionTip = false
 
+Vue.use(ElementUI)
 Vue.use(VueResource)
 Vue.use(VueRouter)
 Vue.use(VueCookie)
@@ -42,14 +47,17 @@ new Vue({
   },
   methods: {
     checkLogin () {
+      NProgress.start()
       // cookie操作方法在源码里有或者参考网上的即可
       if (!this.$cookie.get('user')) {
         // 如果没有登录状态则跳转到登录页
         this.$router.push('/login')
+        NProgress.done()
       } else {
         let userCookie = this.$cookie.get('user')
         store.commit(mutTypes.COOKIE_USER, userCookie)
         this.$router.push('/main/head')
+        NProgress.done()
         // store.commit(mutTypes.RANDOM_USER, userCookie)
         // 否则跳转到登录后的页面
         // this.$router.push('/user_info');

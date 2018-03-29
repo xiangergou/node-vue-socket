@@ -79,7 +79,7 @@ export default {
         }
       }).then((res) => {
         if (res.body.success) {
-          window.alert('注册成功！')
+          this.$message.success('注册成功')
           this.isLogin = true
         } else {
           window.alert(res.body.msg)
@@ -96,12 +96,13 @@ export default {
       let self = this
       this.$http.post('http://127.0.0.1:9001/api/login', params).then((res) => {
         if (res.body.success) {
+          self.$message.success('登录成功')
           self.user = res.body.data.user
           self.$cookie.set('user', JSON.stringify(self.user), 1)
           self.$store.commit(mutTypes.CURRENT_USER, self.user.username)
           self.$router.push('head')
         } else {
-          alert(res.body.msg)
+          self.$message.error(res.body.msg)
         }
       })
     }
@@ -111,8 +112,10 @@ export default {
 
 <style lang="css" scoped="">
 .form-horizontal{
+  display: block;
   padding: 100px 0;
   box-sizing: border-box;
+  overflow-y: hidden;
 }
 fieldset{
   margin: 0 auto;
@@ -127,5 +130,10 @@ fieldset{
   border: none;
   text-align: right;
   color: #da2b65;
+  cursor: pointer;
 }
+input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px white inset;
+  border: 1px solid #CCC!important;
+};
 </style>
